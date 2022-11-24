@@ -3,30 +3,22 @@ import pandas as pd
 import json
 import pycountry
 
-# def create_data():
+def get_most_advanced_df():
+    df = load_data()
+    df = eda_processing(df)
+    return df
 
-#     dfs = []
-#     for r, d, f in os.walk('./censored_tweets/'):
-#         for file in f:
-#             print('file')
-#             if 'withheldtweets.json' in file: 
-#                 print('if')
-#                 dfs.append(pd.read_json('./censored_tweets/%s' % file, lines=True))
+def load_data():
+    dfs = []
+    for r, d, f in os.walk(os.getcwd()):
+        for file in f:
+            if 'withheldtweets.json' in file:
+                dfs.append(pd.read_json("./censored_tweets/%s" % file, lines=True))
 
-#     df_cen = pd.concat(dfs)
-#     df_cen = df_cen.dropna(subset=['withheld_in_countries'])
-
-#     return df_cen
-
-dfs = []
-for r, d, f in os.walk(os.getcwd()):
-    for file in f:
-        if 'withheldtweets.json' in file:
-            dfs.append(pd.read_json("./censored_tweets/%s" % file, lines=True))
-
-df_cen = pd.concat(dfs)
-df_cen = df_cen.dropna(subset=['withheld_in_countries'])
-
+    df_cen = pd.concat(dfs)
+    df_cen = df_cen.dropna(subset=['withheld_in_countries'])
+    return df_cen
+    
 def get_name_country(x):
     country = pycountry.countries.get(alpha_2=x)
     if country == None:
@@ -34,6 +26,13 @@ def get_name_country(x):
     return country.name
 
 def eda_processing(df):
+    """
+    Remove duplicated texts
+    Change possibly_sensitive to boolean
+    Drop unusefull columns 
+    """
+    duplicates = df_cen[['text']].duplicated(keep='first')
+    df_cen_unique_text = df_cen[~duplicates]
     df['possibly_sensitive'] = df.possibly_sensitive.apply(lambda x: x == 1 )
     df = df.drop(['contributors', 'geo', 'coordinates', 'quote_count', 'reply_count', 'retweet_count', 'favorite_count', 'favorited', 'retweeted', 'filter_level'], axis = 1)
     return df
