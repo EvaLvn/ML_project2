@@ -8,4 +8,4 @@ my_dict = {
     'watsaap': 'whatsapp',
     '🅗🅞🆃': 'hot',
     '⚽️': 'football'
-}   'watsaap': 'whatsapp'
+    }

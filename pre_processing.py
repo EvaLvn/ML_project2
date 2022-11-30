@@ -41,7 +41,7 @@ def clean_tweets_after_trad(df_text):
 	clean_tweets = clean_tweets.apply(lambda x: x.lower())
 	clean_tweets = clean_tweets.apply(lambda x: replace_dict(x))
 	clean_tweets = clean_tweets.apply(lambda x: remove_char(x))
-	clean_tweets = pd.DataFrame([ele for ele in clean_tweets if ele != ''], columns =['text'])['text']
+	#clean_tweets = pd.DataFrame([ele for ele in clean_tweets if ele != ''], columns =['text'])['text']
 	clean_tweets = clean_tweets.apply(lambda x : lemmatize_text(x))
 	clean_tweets = clean_tweets.apply(lambda x: remove_stop_words(x))
 	return clean_tweets
