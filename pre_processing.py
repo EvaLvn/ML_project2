@@ -15,26 +15,74 @@ nltk.download('omw-1.4')
 nltk.download('wordnet')
 nltk.download('punkt')
 
+
+my_dict_before_trad = {
+    '-&gt;': ' ',
+    '&amp;': ' and ',
+    '&gt;': ' ',
+    '&lt;': ' ',
+    '-&gt;': ' ',
+    '🅗🅞🆃': ' hot ',
+    '🅒🅛🅘🅒🅚': ' click ',
+    '🅗🅔🅡🅔': ' here ',
+    '🅽🅰🆄🅶🅷🆃🆈': ' naughty ',
+    '🅲🅾🅽🆃🅴🅽🆃': ' content ',
+    '🅼🆈': ' my '
+    }
+
 def remove_user_mentions(tweets):
     return re.sub(r"@\w+", " ", tweets)
 
 def remove_numbers(tweets):
 	return re.sub(r"\d+([.,]\d+)?", " ", tweets)
 
-def remove_URLs(tweets):
-    return re.sub('((www.[^s]+)|(https?://[^s]+))',' ',tweets)
+def remove_URLs(tweets):   
+    return re.sub(r'http\S+', '', tweets)
 
 def remove_RT(tweets):
     return re.sub("RT  :", " ", tweets)
 
+def replace_dict_before_trad(text):
+    for key, value in my_dict_before_trad.items():
+        text = text.replace(key, value)
+    return text
+
+def remove_n(tweets):
+    return tweets.replace("\n", " ")
+
+def remove_emojis(data):
+    emoj = re.compile("["
+        u"\U0001F600-\U0001F64F"  # emoticons
+        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+        u"\U0001F680-\U0001F6FF"  # transport & map symbols
+        u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+        u"\U00002500-\U00002BEF"  # chinese char
+        u"\U00002702-\U000027B0"
+        u"\U00002702-\U000027B0"
+        u"\U000024C2-\U0001F251"
+        u"\U0001f926-\U0001f937"
+        u"\U00010000-\U0010ffff"
+        u"\u2640-\u2642" 
+        u"\u2600-\u2B55"
+        u"\u200d"
+        u"\u23cf"
+        u"\u23e9"
+        u"\u231a"
+        u"\ufe0f"  # dingbats
+        u"\u3030"
+                      "]+", re.UNICODE)
+    return re.sub(emoj, '', data)
+
 def clean_tweets(df_text):
     clean_tweets = df_text.apply(lambda x: remove_URLs(x))
     clean_tweets = clean_tweets.apply(lambda x: remove_user_mentions(x))
+    clean_tweets = clean_tweets.apply(lambda x: replace_dict_before_trad(x))
+    clean_tweets = clean_tweets.apply(lambda x: remove_n(x))
+    clean_tweets = clean_tweets.apply(lambda x: remove_emojis(x))
     clean_tweets = clean_tweets.apply(lambda x: remove_numbers(x))
     clean_tweets = clean_tweets.apply(lambda x: remove_RT(x))
     
     return clean_tweets
-
 
 def clean_tweets_after_trad(df_text):
 	clean_tweets = df_text.apply(lambda x: replace_CamelCases(x))
