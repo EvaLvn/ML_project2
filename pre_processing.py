@@ -2,6 +2,7 @@ import re
 from dict_replacement import *
 from nltk.corpus import stopwords
 import nltk
+import contractions
 import pandas as pd
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
@@ -85,14 +86,16 @@ def clean_tweets(df_text):
     return clean_tweets
 
 def clean_tweets_after_trad(df_text):
-	clean_tweets = df_text.apply(lambda x: replace_CamelCases(x))
-	clean_tweets = clean_tweets.apply(lambda x: x.lower())
-	clean_tweets = clean_tweets.apply(lambda x: replace_dict(x))
-	clean_tweets = clean_tweets.apply(lambda x: remove_char(x))
-	#clean_tweets = pd.DataFrame([ele for ele in clean_tweets if ele != ''], columns =['text'])['text']
-	clean_tweets = clean_tweets.apply(lambda x : lemmatize_text(x))
-	clean_tweets = clean_tweets.apply(lambda x: remove_stop_words(x))
-	return clean_tweets
+    clean_tweets = df_text.apply(lambda x: replace_CamelCases(x))
+    clean_tweets = clean_tweets.apply(lambda x: x.lower())
+    clean_tweets = clean_tweets.apply(lambda x: remove_contractions(x))
+    clean_tweets = clean_tweets.apply(lambda x: replace_dict(x))
+    clean_tweets = clean_tweets.apply(lambda x: remove_char(x))
+    clean_tweets = clean_tweets.apply(lambda x: remove_extra_white_space(x))
+    #clean_tweets = pd.DataFrame([ele for ele in clean_tweets if ele != ''], columns =['text'])['text']
+    #clean_tweets = clean_tweets.apply(lambda x : lemmatize_text(x))
+    #clean_tweets = clean_tweets.apply(lambda x: remove_stop_words(x))
+    return clean_tweets
 
 english_stopwords = stopwords.words('english')
 lemmatizer = nltk.stem.WordNetLemmatizer()
@@ -101,7 +104,8 @@ def replace_CamelCases(text):
     return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', str(text))
 
 def remove_char(tweets):
-    return re.sub(r"[^a-zA-Z0-9]", " ", str(tweets))
+    return re.sub(r"[^a-zA-Z0-9,.!?']", " ", str(tweets))
+    #return re.sub(r"[^a-zA-Z0-9]", " ", str(tweets))
 
 def remove_stop_words(text):
     tokens = word_tokenize(text.lower())
@@ -126,3 +130,16 @@ def replace_dict(text):
     for key, value in my_dict.items():
     	text = text.replace(key, value)
     return text
+
+def remove_contractions(text):
+    # creating an empty list
+    expanded_words = []   
+    for word in text.split():
+    # using contractions.fix to expand the shortened words
+        expanded_words.append(contractions.fix(word))  
+   
+    return ' '.join(expanded_words)
+
+def remove_extra_white_space(text):
+    return re.sub(' +', ' ', text)
+
