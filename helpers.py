@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import json
 import pycountry
+from langcodes import *
 
 def get_most_advanced_df():
     df = load_data()
@@ -31,10 +32,13 @@ def eda_processing(df):
     Change possibly_sensitive to boolean
     Drop unusefull columns 
     """
-    duplicates = df_cen[['text']].duplicated(keep='first')
-    df_cen_unique_text = df_cen[~duplicates]
+    duplicates = df[['text']].duplicated(keep='first')
+    df = df[~duplicates]
     df['possibly_sensitive'] = df.possibly_sensitive.apply(lambda x: x == 1 )
     df = df.drop(['contributors', 'geo', 'coordinates', 'quote_count', 'reply_count', 'retweet_count', 'favorite_count', 'favorited', 'retweeted', 'filter_level'], axis = 1)
+    df['whcs'] = df.withheld_in_countries.apply(lambda l : [get_name_country(c[1:-1]) for c in l[1:-1].split(',')]).apply(lambda x : ', '.join(x))
+    df = flat_withhelded_countries(df, keep_duplicates = False)
+    df['language'] = df['lang'].apply(lambda x : Language.get(x).display_name())
     return df
 
 def flat_withhelded_countries(df, keep_duplicates = False):
