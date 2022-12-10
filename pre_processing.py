@@ -17,20 +17,6 @@ nltk.download('wordnet')
 nltk.download('punkt')
 
 
-my_dict_before_trad = {
-    '-&gt;': ' ',
-    '&amp;': ' and ',
-    '&gt;': ' ',
-    '&lt;': ' ',
-    '-&gt;': ' ',
-    '🅗🅞🆃': ' hot ',
-    '🅒🅛🅘🅒🅚': ' click ',
-    '🅗🅔🅡🅔': ' here ',
-    '🅽🅰🆄🅶🅷🆃🆈': ' naughty ',
-    '🅲🅾🅽🆃🅴🅽🆃': ' content ',
-    '🅼🆈': ' my '
-    }
-
 def remove_user_mentions(tweets):
     return re.sub(r"@\w+", " ", tweets)
 
