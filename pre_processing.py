@@ -17,20 +17,6 @@ nltk.download('wordnet')
 nltk.download('punkt')
 
 
-my_dict_before_trad = {
-    '-&gt;': ' ',
-    '&amp;': ' and ',
-    '&gt;': ' ',
-    '&lt;': ' ',
-    '-&gt;': ' ',
-    '🅗🅞🆃': ' hot ',
-    '🅒🅛🅘🅒🅚': ' click ',
-    '🅗🅔🅡🅔': ' here ',
-    '🅽🅰🆄🅶🅷🆃🆈': ' naughty ',
-    '🅲🅾🅽🆃🅴🅽🆃': ' content ',
-    '🅼🆈': ' my '
-    }
-
 def remove_user_mentions(tweets):
     return re.sub(r"@\w+", " ", tweets)
 
@@ -107,9 +93,9 @@ def remove_char(tweets):
     return re.sub(r"[^a-zA-Z0-9,.!?']", " ", str(tweets))
     #return re.sub(r"[^a-zA-Z0-9]", " ", str(tweets))
 
-def remove_stop_words(text):
+def remove_stop_words(text, stop_words = english_stopwords):
     tokens = word_tokenize(text.lower())
-    tokens_wo_stopwords = [t for t in tokens if t not in english_stopwords]
+    tokens_wo_stopwords = [t for t in tokens if t not in stop_words]
     return " ".join(tokens_wo_stopwords)
 
 def lemmatize_text(text):

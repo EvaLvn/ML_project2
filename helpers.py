@@ -36,7 +36,7 @@ def eda_processing(df):
     df = df[~duplicates]
     df['possibly_sensitive'] = df.possibly_sensitive.apply(lambda x: x == 1 )
     df = df.drop(['contributors', 'geo', 'coordinates', 'quote_count', 'reply_count', 'retweet_count', 'favorite_count', 'favorited', 'retweeted', 'filter_level'], axis = 1)
-    df['whcs'] = df.withheld_in_countries.apply(lambda l : [get_name_country(c[1:-1]) for c in l[1:-1].split(',')]).apply(lambda x : ', '.join(x))
+    df['whcs'] = df.withheld_in_countries.apply(lambda l : [get_name_country(c[1:-1]) for c in l[1:-1].split(', ')]).apply(lambda x : ', '.join(x))
     df = flat_withhelded_countries(df, keep_duplicates = False)
     df['language'] = df['lang'].apply(lambda x : Language.get(x).display_name())
     return df
