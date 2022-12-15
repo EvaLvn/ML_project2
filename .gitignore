@@ -1,5 +1,5 @@
 .ipynb_checkpoints
 __pycache__
-censored_tweets/*
+data/censored_tweets/*
 *.DS_Store
 *.DS_Store?
