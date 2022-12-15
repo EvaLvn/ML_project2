@@ -1,47 +1,49 @@
 # Censorship of Twitter - Unsupervised Topic Modeling
 
-This project focuses on topic modeling for censored tweets. In recent years, there has been an increasing amount of censorship on social media platforms such as Twitter. This has led to a need for methods to identify and understand the topics of censored tweets. In our case, we try to model topics are banned in some countries.
+This project focuses on topic modeling for censored tweets. In recent years, there has been an increasing amount of censorship on social media platforms such as Twitter. This has led to a need for methods to identify and understand the topics of censored tweets. In our case, we aim to discover topics that are prohibited by some countries.
 
 ## Approach
 
-The project uses natural language processing (NLP) techniques to perform topic modeling on censored tweets. This involves a careful pre-processing of the text of the tweets and we use different topic modeling algorithms. The algorithms used are the following: Latent Dirichlet Allocation (LDA), Biterm Topic Model (BTM), Gibbs Sampling Dirichlet Mixture Model (GSDMM) and BERTopic that uses sentence transformer.
+The project uses natural language processing (NLP) techniques to perform topic modeling on censored tweets. This involves a careful pre-processing of the text of the tweets and the use of different topic modeling algorithms. The algorithms used are the following: Latent Dirichlet Allocation (LDA), Biterm Topic Model (BTM), Gibbs Sampling Dirichlet Mixture Model (GSDMM) and BERTopic that uses sentence transformers.
 
 Once the topics have been identified, we analyze and interpret the results to gain insights into the content of the censored tweets.
 
 
 ## Report
 
-The report can be found in Report.pdf
+The report can be found [here](https://github.com/CS-433/cs-433-project-2-todo.pdf).
+
+Don't forget to add the link!
 
 ## Requirements
 To run this project, you will need Python 3 and the following libraries:
 
-bertopic
-bitermplus
-contractions
-deep_translator
-dict_replacement
-gensim
-gsdmm
-hdbscan
-json
-langcodes
-matplotlib
-nltk
-numpy
-pandas
-pickle
-pycountry
-pyLDAvis
-re
-seaborn
-sentence_transformers
-sklearn
-swifter
-textblob
-tmplot
-umap
-wordcloud
+* bertopic
+* bitermplus
+* contractions
+* deep_translator
+* dict_replacement
+* gensim
+* gsdmm
+* hdbscan
+* json
+* langcodes
+* matplotlib
+* nltk
+* numpy
+* pandas
+* pickle
+* pycountry
+* pyLDAvis
+* re
+* seaborn
+* sentence_transformers
+* sklearn
+* swifter
+* textblob
+* tmplot
+* umap
+* wordcloud
 
 You can download the necessary package using the following command:
 
