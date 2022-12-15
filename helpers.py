@@ -60,3 +60,18 @@ def flat_withhelded_countries(df, keep_duplicates = False):
         df_cen_ext = pd.concat([df_cen_ext, df_doubled])
         
     return df_cen_ext
+
+#######################################
+######### LABELLING ###################
+#######################################
+def get_labeled_tweets(country):
+    df_labels = pd.read_csv('data/labelling/'+country+'_final.csv.gz', compression="gzip")
+    df_labels['labels'] = df_labels['labels'].apply(lambda x :x[2:-2].split("', '"))
+    df_labels = df_labels.sort_values(by = 'index')
+    df_labels.set_index('index', inplace = True)
+    return df_labels
+
+def get_score(df_labels) : 
+    df_labels['score'] = df_labels.apply(lambda row : sum([1 for topic in row.topics if topic in row.labels]),axis = 1)
+    final_score = df_labels['score'].agg(sum)
+    return final_score/len(df_labels)
