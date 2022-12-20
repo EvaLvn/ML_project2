@@ -5,11 +5,19 @@ import pycountry
 from langcodes import *
 
 def get_most_advanced_df():
+    """ Returns the df with the preprocessing applied to it 
+    Returns : 
+        df : the data with eda processing applied
+    """
     df = load_data()
     df = eda_processing(df)
     return df
 
 def load_data():
+    """ Load the data from JSON file 
+    Returns : 
+        df : the censored tweets
+    """
     dfs = []
     for r, d, f in os.walk(os.getcwd()):
         for file in f:
@@ -21,6 +29,12 @@ def load_data():
     return df_cen
     
 def get_name_country(x):
+    """ Return the full name of a country from is 2 letters abbreviation
+    Args:
+        x : the two letters abbreviation of the country
+    Returns : 
+        country : the full name of the country
+    """
     country = pycountry.countries.get(alpha_2=x)
     if country == None:
         return 'Undefined'
@@ -31,6 +45,10 @@ def eda_processing(df):
     Remove duplicated texts
     Change possibly_sensitive to boolean
     Drop unusefull columns 
+    Args:
+        df : the censored tweets
+    Returns : 
+        df : the censored tweets with processing applied 
     """
     duplicates = df[['text']].duplicated(keep='first')
     df = df[~duplicates]
@@ -48,6 +66,12 @@ def flat_withhelded_countries(df, keep_duplicates = False):
     Finally add a column if this tweet was duplicated or not.
     
     Ex t1 has withhelded country ['fr', 'ge']. t1 will be added twice in the df once with withhelded country 'fr' and once with withhelded country 'ge'. If keep_duplicates is true, then the original tweet with withhelded country ['fr','ge'] will be kept in df
+    
+    Args:
+        df : the censored tweets
+        keep_duplicates = False : if we keep the tweets in format of both country as `withhelded_countries` feature
+    Returns : 
+        df : the censored tweets with flatten withhelded countries
     """
     
     df_cen_ext = df.copy()
@@ -64,7 +88,14 @@ def flat_withhelded_countries(df, keep_duplicates = False):
 #######################################
 ######### LABELLING ###################
 #######################################
+
 def get_labeled_tweets(country):
+    """ Return the full name of a country from is 2 letters abbreviation
+    Args:
+        x : the two letters abbreviation of the country
+    Returns : 
+        country : the full name of the country
+    """
     df_labels = pd.read_csv('../data/labelling/'+country+'_final.csv.gz', compression="gzip")
     df_labels['labels'] = df_labels['labels'].apply(lambda x :x[2:-2].split("', '"))
     df_labels = df_labels.sort_values(by = 'index')
@@ -72,6 +103,13 @@ def get_labeled_tweets(country):
     return df_labels
 
 def get_score(df_labels) : 
+    """ Get the accuracy by compare the topics given by the algorithm with the ones given by
+    us
+    Args:
+        df_labels : the df with columns of label given by us and by algorithm
+    Returns : 
+        accuracy : the accuracy of the algorithm to give the same label as us
+    """
     df_labels['score'] = df_labels.apply(lambda row : sum([1 for topic in row.topics if topic in row.labels]),axis = 1)
     final_score = df_labels['score'].agg(sum)
     return final_score/len(df_labels)
