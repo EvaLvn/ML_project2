@@ -18,26 +18,68 @@ nltk.download('punkt')
 
 
 def remove_user_mentions(tweets):
+    """Removes mentions of user
+    Args:
+        tweets : the tweets to modifiy
+    Returns:
+        the modified tweets
+    """
     return re.sub(r"@\w+", " ", tweets)
 
 def remove_numbers(tweets):
-	return re.sub(r"\d+([.,]\d+)?", " ", tweets)
+    """Removes numbers
+    Args:
+        tweets : the tweets to modifiy
+    Returns:
+        the modified tweets
+    """
+    return re.sub(r"\d+([.,]\d+)?", " ", tweets)
 
 def remove_URLs(tweets):   
+    """Removes URLs
+    Args:
+        tweets : the tweets to modifiy
+    Returns:
+        the modified tweets
+    """
     return re.sub(r'http\S+', '', tweets)
 
 def remove_RT(tweets):
+    """Removes mentions of retweet
+    Args:
+        tweets : the tweets to modifiy
+    Returns:
+        the modified tweets
+    """
     return re.sub("RT  :", " ", tweets)
 
 def replace_dict_before_trad(text):
+    """Replaces some words by other for uniformity
+    Args:
+        text : the text to modifiy
+    Returns:
+        the modified text
+    """
     for key, value in my_dict_before_trad.items():
         text = text.replace(key, value)
     return text
 
 def remove_n(tweets):
+    """Removes back to line symbol
+    Args:
+        tweets : the tweets to modifiy
+    Returns:
+        the modified tweets
+    """
     return tweets.replace("\n", " ")
 
 def remove_emojis(data):
+    """Removes emojis
+    Args:
+        data : the data to modifiy
+    Returns:
+        the modified data
+    """
     emoj = re.compile("["
         u"\U0001F600-\U0001F64F"  # emoticons
         u"\U0001F300-\U0001F5FF"  # symbols & pictographs
@@ -61,6 +103,12 @@ def remove_emojis(data):
     return re.sub(emoj, '', data)
 
 def clean_tweets(df_text):
+    """Cleans tweets
+    Args:
+        df_text : the texts in dataframe format
+    Returns:
+        the cleaned texts in dataframe format
+    """
     clean_tweets = df_text.apply(lambda x: remove_URLs(x))
     clean_tweets = clean_tweets.apply(lambda x: remove_user_mentions(x))
     clean_tweets = clean_tweets.apply(lambda x: replace_dict_before_trad(x))
@@ -72,6 +120,12 @@ def clean_tweets(df_text):
     return clean_tweets
 
 def clean_tweets_after_trad(df_text):
+    """Cleans tweets after the translation
+    Args:
+        df_text : the texts in dataframe format    
+    Returns:
+        the cleaned texts in dataframe format
+    """
     clean_tweets = df_text.apply(lambda x: replace_CamelCases(x))
     clean_tweets = clean_tweets.apply(lambda x: x.lower())
     clean_tweets = clean_tweets.apply(lambda x: remove_contractions(x))
@@ -87,23 +141,53 @@ english_stopwords = stopwords.words('english')
 lemmatizer = nltk.stem.WordNetLemmatizer()
 
 def replace_CamelCases(text):
+    """Replaces camel cases
+    Args:
+        text : the text to modifiy
+    Returns:
+        the modified text
+    """
     return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', str(text))
 
 def remove_char(tweets):
+    """Removes special characters
+    Args:
+        tweets : the tweets to modifiy
+    Returns:
+        the modified tweets
+    """
     return re.sub(r"[^a-zA-Z0-9,.!?']", " ", str(tweets))
     #return re.sub(r"[^a-zA-Z0-9]", " ", str(tweets))
 
 def remove_stop_words(text, stop_words = english_stopwords):
+    """Removes stop words
+    Args:
+        text : the text to modifiy
+        stop_words : the stop words dictionnary
+    Returns:
+        the modified text
+    """
     tokens = word_tokenize(text.lower())
     tokens_wo_stopwords = [t for t in tokens if t not in stop_words]
     return " ".join(tokens_wo_stopwords)
 
 def lemmatize_text(text):
+    """Lemmatizes the text
+    Args:
+        text : the text to modifiy
+    Returns:
+        the lemmatized text
+    """
     a = [lemmatizer.lemmatize(w, get_wordnet_pos(w)) for w in nltk.word_tokenize(text)]
     return ' '.join([lemmatizer.lemmatize(w) for w in a])
 
 def get_wordnet_pos(word):
-    """Map POS tag to first character lemmatize() accepts"""
+    """Map POS tag to first character lemmatize() accepts
+    Args:
+        word : the word to tag
+    Returns:
+        the corresponding tag
+    """
     tag = nltk.pos_tag([word])[0][1][0].upper()
     tag_dict = {"J": wordnet.ADJ,
                 "N": wordnet.NOUN,
@@ -113,11 +197,23 @@ def get_wordnet_pos(word):
     return tag_dict.get(tag, wordnet.NOUN)
 
 def replace_dict(text):
+    """Replaces some words by other for uniformity
+    Args:
+        text : the text to modifiy
+    Returns:
+        the modified text
+    """
     for key, value in my_dict.items():
     	text = text.replace(key, value)
     return text
 
 def remove_contractions(text):
+    """Removes word contractions
+    Args:
+        text : the text to modifiy
+    Returns:
+        the modified text
+    """
     # creating an empty list
     expanded_words = []   
     for word in text.split():
@@ -127,5 +223,11 @@ def remove_contractions(text):
     return ' '.join(expanded_words)
 
 def remove_extra_white_space(text):
+    """Removes extra white spaces
+    Args:
+        text : the text to modifiy
+    Returns:
+        the modified text
+    """
     return re.sub(' +', ' ', text)
 
