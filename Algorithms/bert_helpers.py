@@ -11,14 +11,15 @@ from sklearn.feature_extraction.text import CountVectorizer
 from hdbscan import HDBSCAN
 from umap import UMAP
 
-
-def save_model(model, params, message = ""):
-    saved_models.append((model, params, message))
-    
-def write_good_params():
-    pickle.dump(saved_models, open( "../data/saved_models/save_models_for_"+country+".pkl", "wb" ))
     
 def get_model(params, additional_stop_words =  []) :
+    """Computes a BERT model
+    Args:
+        params : the associated parameters to the model to be computed
+        additional_stop_words : a list of additional stop words to remove
+    Return:
+        the corresponding model
+    """
     embedding_model = SentenceTransformer("all-mpnet-base-v2") #'digio/Twitter4SSE'
     s = list(stopwords.words('english')).extend(additional_stop_words)
     vectorizer_model = CountVectorizer(stop_words=s)
@@ -48,15 +49,41 @@ def get_model(params, additional_stop_words =  []) :
     return model
 
 def load_data_bert(country):
+    """Loads preprocessed data for BERT algorithm
+    Args:
+        country : the country whose data we want to be censored
+    Return:
+        the dataframe of the data we need for the model
+    """
     df = pd.read_csv('../data/to_be_clustered.csv.gz', compression="gzip")
     df = df[df.whcs == country]
     df.drop(df[df.clean.isna()].index,inplace =True)
     return df
 
 def get_tweets_of_topic(topics, topic_nb, tweets, n):
+    """Gets all tweets attributed to a certain topic
+    Args:
+        topics : a list of the attributed topics to each document
+        topic_nb : the topic we want to keep
+        tweets : a list of all tweets
+        n : the number of tweets per topic we want to print
+    Return:
+        a list of tweets attributed to the chosen topic_nb
+    """
+    
     return [tweet for i, tweet in enumerate(tweets) if topics[i] == topic_nb][:n]
 
-def get_coherence(model, tweets, topics, coherence = 'c_v'):    # Preprocess Documents
+def get_coherence(model, tweets, topics, coherence = 'c_v'):
+    """Computes coherence
+    Args:
+        model : the model for which we want the coherence
+        tweets : the tweets we used in the model
+        topics : a list of the attributed topics to each document
+        coherence : the type of coherence (we used 'c_v' and 'u_mass')
+    Return:
+        the coherence
+    """
+    # Preprocess Documents
     documents = pd.DataFrame({"Document": tweets,
                               "ID": range(len(tweets)),
                               "Topic": topics})
