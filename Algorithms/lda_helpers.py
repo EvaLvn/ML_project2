@@ -136,16 +136,3 @@ def get_topic_from_bow(model , bow):
         return -1
     else :
         return topic[0][0]
-    
-def get_labelled_tweets(country): 
-    """ Get the df with the labels of tweets given by us 
-    Args:
-        country : the country whose censored tweets we want to keep
-    Returns : 
-        df_labels : the df with the labels of tweets given by us 
-    """
-    df_labels = pd.read_csv('../data/labelling/'+country+'_final.csv.gz', compression="gzip")
-    df_labels['labels'] = df_labels['labels'].apply(lambda x :x[2:-2].split("', '"))
-    df_labels = df_labels.sort_values(by = 'index')
-    df_labels.set_index('index', inplace = True)
-    return df_labels
