@@ -182,7 +182,12 @@ def lemmatize_text(text):
     return ' '.join([lemmatizer.lemmatize(w) for w in a])
 
 def get_wordnet_pos(word):
-    """Map POS tag to first character lemmatize() accepts"""
+    """Map POS tag to first character lemmatize() accepts
+    Args:
+        word : the word to tag
+    Returns:
+        the corresponding tag
+    """
     tag = nltk.pos_tag([word])[0][1][0].upper()
     tag_dict = {"J": wordnet.ADJ,
                 "N": wordnet.NOUN,
@@ -192,6 +197,12 @@ def get_wordnet_pos(word):
     return tag_dict.get(tag, wordnet.NOUN)
 
 def replace_dict(text):
+    """Replaces some words by other for uniformity
+    Args:
+        text : the text to modifiy
+    Returns:
+        the modified text
+    """
     for key, value in my_dict.items():
     	text = text.replace(key, value)
     return text
