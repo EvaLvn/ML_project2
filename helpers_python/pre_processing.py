@@ -33,7 +33,7 @@ def remove_numbers(tweets):
     Returns:
         the modified tweets
     """
-	return re.sub(r"\d+([.,]\d+)?", " ", tweets)
+    return re.sub(r"\d+([.,]\d+)?", " ", tweets)
 
 def remove_URLs(tweets):   
     """Removes URLs
