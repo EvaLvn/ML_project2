@@ -22,7 +22,7 @@ def load_data():
     for r, d, f in os.walk(os.getcwd()):
         for file in f:
             if 'withheldtweets.json' in file:
-                dfs.append(pd.read_json("./censored_tweets/%s" % file, lines=True))
+                dfs.append(pd.read_json("./data/censored_tweets/%s" % file, lines=True))
 
     df_cen = pd.concat(dfs)
     df_cen = df_cen.dropna(subset=['withheld_in_countries'])
